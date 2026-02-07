@@ -1,1 +1,11 @@
+image_prompt: |
+  {topic}, {style}, high quality,
+  digital illustration, vibrant,
+  professional, youtube community post
 
+post_prompt: |
+  Write a short YouTube Community post.
+  Include a poll question.
+  Use emojis.
+  Max 180 characters.
+  End with a CTA to comment.
