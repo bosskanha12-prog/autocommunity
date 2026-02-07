@@ -1,1 +1,14 @@
+polls:
+  - question: "Which one wins?"
+    options:
+      - "A️⃣ AI Generated"
+      - "B️⃣ Human Made"
+      - "C️⃣ Both 🔥"
+      - "D️⃣ Not Sure 🤔"
 
+  - question: "What do you prefer?"
+    options:
+      - "A️⃣ Minimal 🎨"
+      - "B️⃣ Detailed 🖌️"
+      - "C️⃣ Cinematic 🎬"
+      - "D️⃣ Abstract 🌀"
