@@ -14,7 +14,10 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip install -r requirements.txt
-      - run: python src/main.py
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           STABILITY_API_KEY: ${{ secrets.STABILITY_API_KEY }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+      - run: python src/main.py
