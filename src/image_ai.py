@@ -1,9 +1,19 @@
-import requests, os, base64
+import requests
+import os
+import base64
 
-def generate_image(prompt, output="assets/generated/today.png"):
+STABILITY_URL = "https://api.stability.ai/v1/generation/sdxl-1-0/text-to-image"
+
+
+def generate_image(prompt, output_path):
+    api_key = os.getenv("STABILITY_API_KEY")
+    if not api_key:
+        raise RuntimeError("STABILITY_API_KEY not set")
+
     headers = {
-        "Authorization": f"Bearer {os.getenv('STABILITY_API_KEY')}",
-        "Accept": "application/json"
+        "Authorization": f"Bearer {api_key}",
+        "Accept": "application/json",
+        "Content-Type": "application/json"
     }
 
     payload = {
@@ -11,15 +21,30 @@ def generate_image(prompt, output="assets/generated/today.png"):
         "cfg_scale": 7,
         "height": 512,
         "width": 512,
-        "steps": 30
+        "steps": 30,
+        "samples": 1
     }
 
-    r = requests.post(
-        "https://api.stability.ai/v1/generation/sdxl-1-0/text-to-image",
-        headers=headers,
-        json=payload
-    )
+    r = requests.post(STABILITY_URL, headers=headers, json=payload)
 
-    image_data = r.json()["artifacts"][0]["base64"]
-    with open(output, "wb") as f:
-        f.write(base64.b64decode(image_data))
+    # 🔴 HARD CHECK
+    if r.status_code != 200:
+        raise RuntimeError(
+            f"Stability API failed: {r.status_code} → {r.text}"
+        )
+
+    data = r.json()
+
+    # 🔴 HARD CHECK
+    if "artifacts" not in data:
+        raise RuntimeError(
+            f"Unexpected Stability response: {data}"
+        )
+
+    image_base64 = data["artifacts"][0]["base64"]
+    image_bytes = base64.b64decode(image_base64)
+
+    with open(output_path, "wb") as f:
+        f.write(image_bytes)
+
+    return output_path
