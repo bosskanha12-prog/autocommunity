@@ -23,19 +23,28 @@ def get_youtube_client():
     return build("youtube", "v3", credentials=creds)
 
 
-def upload_community_post(text):
+def upload_community_post(text, image_path=None):
+    """
+    Publish a text community/bulletin-style post.
+
+    Note: the Data API activities.insert endpoint used here does not support
+    uploading an image for community posts. `image_path` is accepted to keep
+    the caller interface stable and for future implementation.
+    """
     youtube = get_youtube_client()
+
+    if image_path:
+        print(
+            "⚠️ image_path was provided but YouTube Data API does not support "
+            "attaching an image via activities.insert; posting text only."
+        )
 
     request = youtube.activities().insert(
         part="snippet,contentDetails",
         body={
-            "snippet": {
-                "description": text
-            },
-            "contentDetails": {
-                "bulletin": {}
-            }
-        }
+            "snippet": {"description": text},
+            "contentDetails": {"bulletin": {}},
+        },
     )
 
     return request.execute()
